@@ -1,20 +1,89 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import "react-native-gesture-handler";
+import GetStarted from "./src/Screens/GetStarted";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function App() {
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import SiginInScreen from "./src/Screens/login/SiginInScreen";
+import HomeScreen from "./src/Screens/home/HomeScreen";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { Entypo } from "@expo/vector-icons";
+import RegisterScreen from "./src/Screens/register/RegisterScreen";
+
+const Tab = createMaterialBottomTabNavigator();
+
+function HomeBottomTab() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Tab.Navigator
+      activeColor="gray"
+      inactiveColor="#fff"
+      barStyle={{ backgroundColor: "#6C63FF", height: 70 }}
+      screenOptions={{ tabBarLabel: "" }}
+    >
+      <Tab.Screen
+        name="Main"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Entypo name="add-user" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Visitor"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Entypo name="users" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Entypo name="user" color={color} size={26} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="Welcome"
+            component={GetStarted}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={SiginInScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={HomeBottomTab}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
+  );
+}
