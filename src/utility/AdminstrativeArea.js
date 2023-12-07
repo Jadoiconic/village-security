@@ -12,29 +12,24 @@ function getDistrictsByProvince(province) {
   return [];
 }
 
-function getSectorsByDistrict({district, province}) {
-
-  if( !province || !district)return []
+function getSectorsByDistrict({ district, province }) {
+  if (!province || !district) return [];
   const districts = getDistrictsByProvince(province);
-  const sectors =   districts[district] 
+  const sectors = districts[district];
   return sectors ?? [];
 }
 
 function getCellsBySector({ district, province, sector }) {
-
-  if(!district || !province || !sector) return []
-  const sectors = getSectorsByDistrict({province, district} );
-  return   sectors[sector] ?? []
+  if (!district || !province || !sector) return [];
+  const sectors = getSectorsByDistrict({ province, district });
+  return sectors[sector] ?? [];
 }
 
-
 function getVillagesByCell({ district, province, sector, cell }) {
-
-  if(!province || !district || !sector || !cell)return []
+  if (!province || !district || !sector || !cell) return [];
   const cells = getCellsBySector({ district, province, sector });
-  const villages =  cells[cell]
-  return villages ?? []
-  
+  const villages = cells[cell];
+  return villages ?? [];
 }
 
 export const AdministrativeArea = {
@@ -42,5 +37,5 @@ export const AdministrativeArea = {
   getDistrictsByProvince,
   getSectorsByDistrict,
   getCellsBySector,
-  getVillagesByCell
+  getVillagesByCell,
 };

@@ -6,24 +6,25 @@ import ComboBox from "../../components/comboBox/ComboBox";
 import data from "../../utility/data.js";
 import TextButton from "../../components/button/TextButton";
 import { AdministrativeArea } from "../../utility/AdminstrativeArea";
+import HeaderComponent from "../../components/header/HeaderComponent";
 
 const RegisterScreen = () => {
   const [fname, setFName] = useState("");
   const [lname, setLName] = useState("");
   const [province, setProvice] = useState("North");
   const [district, setDistrict] = useState("Gakenke");
-  const [sector, setSector] = useState("Busengo");
+  const [sector, setSectorsor] = useState("Busengo");
   const [cell, setCell] = useState("Ruhanga");
   const [village, setVillage] = useState("Bukinga");
   const [id, setId] = useState("");
   const [phone, sePhone] = useState("");
   const [email, setEmail] = useState("");
 
-  const [prov] = useState(AdministrativeArea.getProvinces(data));
-  const [dist, setDist] = useState(
+  const [provinces] = useState(AdministrativeArea.getProvinces(data));
+  const [districts, setDistricts] = useState(
     Object.keys(AdministrativeArea.getDistrictsByProvince(province))
   );
-  const [sect, setSect] = useState(
+  const [sectors, setSectors] = useState(
     Object.keys(
       AdministrativeArea.getSectorsByDistrict({
         district: "Gakenke",
@@ -43,7 +44,7 @@ const RegisterScreen = () => {
 
   const updateDistricts = () => {
     if (province) {
-      setDist(Object.keys(AdministrativeArea.getDistrictsByProvince(province)));
+      setDistricts(Object.keys(AdministrativeArea.getDistrictsByProvince(province)));
     }
   };
 
@@ -55,7 +56,7 @@ const RegisterScreen = () => {
       });
 
       if (sectors) {
-        setSect(Object.keys(sectors));
+        setSectors(Object.keys(sectors));
       }
     }
   };
@@ -67,7 +68,6 @@ const RegisterScreen = () => {
         district,
         sector,
       });
-      // console.log({cells})
 
       if (cells) {
         setCells(Object.keys(cells));
@@ -83,7 +83,6 @@ const RegisterScreen = () => {
         sector,
         cell,
       });
-      // console.log({ villages });
 
       if (cells) {
         setVillages(villages);
@@ -99,32 +98,30 @@ const RegisterScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.title}>New Vistor Registration</Text>
-      </View>
+      <HeaderComponent title="New Visitor REgistration" />
       <ScrollView style={styles.form}>
         <ComboBox
           label="Province"
           selectedValue={province}
           onSelectChange={(value) => setProvice(value)}
-          options={prov}
+          options={provinces}
         />
 
-        {Boolean(district) && (
+        {Boolean(districts) && (
           <ComboBox
             label="Districts"
             selectedValue={district}
             onSelectChange={(value) => setDistrict(value)}
-            options={dist}
+            options={districts}
           />
         )}
 
-        {Boolean(sect) && (
+        {Boolean(sectors) && (
           <ComboBox
             label="Sector"
             selectedValue={sector}
-            onSelectChange={(value) => setSector(value)}
-            options={sect}
+            onSelectChange={(value) => setSectorsor(value)}
+            options={sectors}
           />
         )}
 
@@ -190,12 +187,13 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
+    // marginTop: 25,
   },
   title: {
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
+    color:'white'
   },
   form: {
     paddingHorizontal: 20,
