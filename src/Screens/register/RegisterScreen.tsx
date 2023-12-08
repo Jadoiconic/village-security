@@ -98,7 +98,7 @@ const RegisterScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderComponent title="New Visitor REgistration" />
+      <HeaderComponent title="New Visitor Registration" />
       <ScrollView style={styles.form}>
         <ComboBox
           label="Province"

@@ -3,12 +3,14 @@ import GetStarted from "./src/Screens/GetStarted";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import SiginInScreen from "./src/Screens/login/SiginInScreen";
 import HomeScreen from "./src/Screens/home/HomeScreen";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Entypo } from "@expo/vector-icons";
 import RegisterScreen from "./src/Screens/register/RegisterScreen";
+import { useEffect, useState } from "react";
+import { auth } from "./src/services/config";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -63,10 +65,14 @@ function HomeBottomTab() {
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+
+
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Welcome">
           <Stack.Screen
             name="Welcome"
             component={GetStarted}

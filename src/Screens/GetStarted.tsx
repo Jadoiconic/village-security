@@ -1,9 +1,18 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect } from "react";
+import { auth } from "../services/config";
 
 export default function GetStarted() {
   const navigation = useNavigation();
+  useEffect(()=>{
+  if(auth.currentUser?.email){
+    navigation.navigate("Home")
+  }else{
+    navigation.navigate("Welcome")
+  }
+
+  },[])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to Village</Text>
