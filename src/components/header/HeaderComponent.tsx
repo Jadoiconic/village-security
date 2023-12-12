@@ -4,18 +4,28 @@ interface headerProps {
   title: string;
   headerLeft?: (any: any) => void;
   headerRight?: (any: any) => void;
+  border?: number;
 }
 
-const HeaderComponent = ({ headerLeft,title, headerRight }: headerProps) => {
+const HeaderComponent = ({ headerLeft, title, headerRight, border }: headerProps) => {
   return (
-    <View style={[styles.container,{flexDirection: headerLeft || headerRight ? "row":"column",}]}>
-      {headerLeft && (<View>
-        <Text style={styles.title}>{title}</Text>
-      </View>)}
+    <View
+      style={[
+        styles.container,
+        { flexDirection: headerLeft || headerRight ? "row" : "column", borderBottomWidth: border ? 1 : border, },
+      ]}
+    >
+      {headerLeft && (
+        <View>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+      )}
       <Text style={styles.title}>{title}</Text>
-     {headerRight && ( <View>
-        <Text style={styles.title}>{title}</Text>
-      </View>)}
+      {headerRight && (
+        <View>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -30,11 +40,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   container: {
-    borderBottomWidth: 1,
     borderColor: "black",
     paddingVertical: 20,
     backgroundColor: "#6C63FF",
-    
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,

@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import GetStarted from "./src/Screens/GetStarted";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Octicons } from '@expo/vector-icons';
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -9,8 +10,8 @@ import HomeScreen from "./src/Screens/home/HomeScreen";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Entypo } from "@expo/vector-icons";
 import RegisterScreen from "./src/Screens/register/RegisterScreen";
-import { useEffect, useState } from "react";
-import { auth } from "./src/services/config";
+import ProfileScreen from "./src/Screens/profile/ProfileScreen";
+import UsersScreen from "./src/Screens/users/UsersScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -45,13 +46,22 @@ function HomeBottomTab() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color }) => (
+            <Octicons name="checklist" size={26} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Users"
+        component={UsersScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
             <Entypo name="users" color={color} size={26} />
           ),
         }}
       />
       <Tab.Screen
         name="Profile"
-        component={HomeScreen}
+        component={ProfileScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <Entypo name="user" color={color} size={26} />
@@ -65,10 +75,6 @@ function HomeBottomTab() {
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState(null);
-
-
-
   return (
     <>
       <NavigationContainer>

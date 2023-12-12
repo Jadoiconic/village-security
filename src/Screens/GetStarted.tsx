@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
 import { auth } from "../services/config";
 
-export default function GetStarted() {
-  const navigation = useNavigation();
+interface NavigationProps{
+  navigation: NavigationProp<any,any>
+}
+
+export default function GetStarted({navigation}:NavigationProps) {
   useEffect(()=>{
   if(auth.currentUser?.email){
     navigation.navigate("Home")
@@ -19,11 +22,11 @@ export default function GetStarted() {
       
       <View style={{ width: "100%", height: "50%", position: "relative" }}>
         <Image
-          source={require("../../assets/images/welcome.png")}
+          source={require("../../assets/images/wlcm.png")}
           style={styles.image}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('Login')}}>
+      <TouchableOpacity style={[styles.button,{backgroundColor: "#6C63FF",}]} onPress={()=>{navigation.navigate('Login')}}>
         <View>
           <Text style={styles.buttonText}>Get Started</Text>
         </View>
@@ -41,9 +44,11 @@ const styles = StyleSheet.create({
     height:'100%'
   },
   image: {
-    width: "100%",
+    width: "95%",
     height: 500,
     resizeMode: "cover",
+    borderRadius:250,
+    alignSelf:'center'
   },
   title: {
     fontSize: 30,
@@ -53,7 +58,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 60,
     borderRadius: 8,
-    backgroundColor: "#6C63FF",
     marginTop: 20,
   },
   buttonText: {

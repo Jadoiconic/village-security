@@ -10,27 +10,17 @@ interface loginProps {
   password: string;
 }
 
-export const login = async (email, password) => {
+export const login = async ({email, password}:loginProps) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
       password
-    ).catch((error) => {
-      console.error("Authentication error:", error);
-      throw error;
-    });
+    );
 
     return userCredential;
   } catch (error) {
-    if ((error).code === "auth/user-not-found") {
-      console.error("User not found. Please check your email.");
-    } else if ((error).code === "auth/wrong-password") {
-      console.error("Incorrect password. Please try again.");
-    } else {
-      // Log other errors
-      console.error("Authentication error:", error);
-    }
+   console.log(error)
     throw error;
   }
 };
@@ -39,7 +29,7 @@ export const emailVerification = async (): Promise<void> => {
   const user = auth.currentUser;
 
   if (!user) {
-    console.error("No user found for email verification.");
+    alert("No user found for email verification.");
     return;
   }
 
@@ -49,16 +39,16 @@ export const emailVerification = async (): Promise<void> => {
       url: "",
     });
 
-    console.log("Email verification sent successfully.");
+    alert("Email verification sent successfully.");
   } catch (error) {
     const errorCode = (error as any).code;
     const errorMessage = (error as any).message;
-    console.error("Email Verification Error:", errorCode, errorMessage);
+    alert("Email Verification Error:", errorCode, errorMessage);
     throw error;
   }
 };
 
-export const signup = async (email, password) => {
+export const signup = async ({email, password}:loginProps) => {
   const userCredentials = await createUserWithEmailAndPassword(
     auth,
     email,

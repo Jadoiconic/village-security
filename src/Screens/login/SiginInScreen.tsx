@@ -5,14 +5,16 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { login } from "../../services/Auth";
 import { auth } from "../../services/config";
 
-const SiginInScreen = () => {
-  const navigation = useNavigation();
+interface NavigationProps{
+  navigation: NavigationProp<any,any>
+}
+const SiginInScreen = ({navigation}:NavigationProps) => {
   useEffect(()=>{
    const unsbscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -25,7 +27,6 @@ const SiginInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [] = useState(true);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -33,11 +34,16 @@ const SiginInScreen = () => {
       const user = await login(email, password);
       if (user) {
         navigation.navigate("Home");
-        setLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      if(error.code === "auth/invalid-credential"){
+        alert("Invalid Username or password");
+      }else{
+        alert("Something went wrong try again")
+      }
       throw error;
+    }finally{
+      setLoading(false)
     }
   };
   return (
@@ -50,6 +56,7 @@ const SiginInScreen = () => {
             <Text style={styles.label}>Email</Text>
             <TextInput
               placeholder="example@gmail.com"
+              autoCapitalize="none"
               value={email}
               onChangeText={(e) => {
                 setEmail(e);
@@ -70,7 +77,7 @@ const SiginInScreen = () => {
           </View>
         </View>
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button,{backgroundColor: !email || !password.length  ||loading ? "#9C99ff" : "#6C63FF",}]}
           disabled={!email || (!password && loading) ? true : false}
           onPress={handleLogin}
         >
