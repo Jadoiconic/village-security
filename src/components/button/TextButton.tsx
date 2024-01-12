@@ -2,14 +2,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
 interface buttonProps{
-    title:string
+    title:string;
+    onClick: (any:any) => void;
 }
-const TextButton = ({title}:buttonProps) => {
+const TextButton = ({title, onClick }:buttonProps) => {
   return (
     <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-        }}
+        onPress={onClick}
       >
         <View>
           <Text style={styles.buttonText}>{title}</Text>

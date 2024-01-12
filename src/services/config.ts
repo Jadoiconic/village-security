@@ -1,22 +1,43 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA0DOZewvqtCWAOYQd0Yd4dB56GKNBZ4Do",
-  authDomain: "village-security.firebaseapp.com",
-  projectId: "village-security",
-  storageBucket: "village-security.appspot.com",
-  messagingSenderId: "520185260705",
-  appId: "1:520185260705:web:c9e05373f33d32aba9dee0",
+  apiKey: "AIzaSyD-j6S4nAO_to3gmKtS9900Ps8wu99hr8k",
+  authDomain: "village-f4548.firebaseapp.com",
+  projectId: "village-f4548",
+  storageBucket: "village-f4548.appspot.com",
+  messagingSenderId: "282231058200",
+  appId: "1:282231058200:web:913156cd726e522d98f86d"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firebase Auth with AsyncStorage for persistent state
+const auth = getAuth(app);
+auth.useDeviceLanguage(); 
+
+// Set up Firebase Firestore
 const db = getFirestore(app);
 
-const auth = getAuth(app)
+// Persist authentication state using AsyncStorage
+const persistAuthState = async (user:any) => {
+  try {
+    if (user) {
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+    } else {
+      await AsyncStorage.removeItem('user');
+    }
+  } catch (error) {
+    console.error('Error persisting auth state:', error);
+  }
+};
 
-export { db, app, auth}
+// Listen for changes in authentication state and persist the state
+onAuthStateChanged(auth, (user) => {
+  persistAuthState(user);
+});
+
+export { db, app, auth, persistAuthState };

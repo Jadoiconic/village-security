@@ -29,6 +29,7 @@ const InputComp = ({
           style={styles.input}
           value={value}
           keyboardType={keyboard}
+          autoCapitalize="none"
           onChangeText={onChangeText}
         />
       </View>

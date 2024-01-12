@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import GetStarted from "./src/Screens/GetStarted";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Octicons } from '@expo/vector-icons';
+import { Octicons } from "@expo/vector-icons";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -12,6 +12,7 @@ import { Entypo } from "@expo/vector-icons";
 import RegisterScreen from "./src/Screens/register/RegisterScreen";
 import ProfileScreen from "./src/Screens/profile/ProfileScreen";
 import UsersScreen from "./src/Screens/users/UsersScreen";
+import ListOfVisitors from "./src/Screens/visitors/ListOfVisitors";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -43,7 +44,7 @@ function HomeBottomTab() {
       />
       <Tab.Screen
         name="Visitor"
-        component={HomeScreen}
+        component={ListOfVisitors}
         options={{
           tabBarIcon: ({ color }) => (
             <Octicons name="checklist" size={26} color={color} />
@@ -89,6 +90,7 @@ export default function App() {
             component={SiginInScreen}
             options={{ headerShown: false }}
           />
+
           <Stack.Screen
             name="Home"
             component={HomeBottomTab}

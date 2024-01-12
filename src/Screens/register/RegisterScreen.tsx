@@ -7,8 +7,14 @@ import data from "../../utility/data.js";
 import TextButton from "../../components/button/TextButton";
 import { AdministrativeArea } from "../../utility/AdminstrativeArea";
 import HeaderComponent from "../../components/header/HeaderComponent";
+import { collection, addDoc } from "firebase/firestore";
+import { auth, db } from "../../services/config";
+import { NavigationProp } from "@react-navigation/native";
 
-const RegisterScreen = () => {
+interface NavigationProps {
+  navigation: NavigationProp<any, any>;
+}
+const RegisterScreen = ({ navigation }: NavigationProps) => {
   const [fname, setFName] = useState("");
   const [lname, setLName] = useState("");
   const [province, setProvice] = useState("North");
@@ -19,6 +25,38 @@ const RegisterScreen = () => {
   const [id, setId] = useState("");
   const [phone, sePhone] = useState("");
   const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
+
+  // handle submit
+  useEffect(() => {
+    setUserId(auth.currentUser.uid);
+  }, []);
+
+  const hadleReagisterVisotor = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "Visitors"), {
+        firstName: fname,
+        lastName: lname,
+        privince: province,
+        district: district,
+        sector: sector,
+        cell: cell,
+        village: village,
+        identity: id,
+        phone: phone,
+        email: email,
+        userId: userId,
+      });
+      if (docRef) {
+        alert("Data Recorded successfuly!");
+        navigation.navigate("Visitor");
+      }
+    } catch (e) {
+      alert(e);
+    }
+  };
+
+  // habdle hold values
 
   const [provinces] = useState(AdministrativeArea.getProvinces(data));
   const [districts, setDistricts] = useState(
@@ -44,7 +82,9 @@ const RegisterScreen = () => {
 
   const updateDistricts = () => {
     if (province) {
-      setDistricts(Object.keys(AdministrativeArea.getDistrictsByProvince(province)));
+      setDistricts(
+        Object.keys(AdministrativeArea.getDistrictsByProvince(province))
+      );
     }
   };
 
@@ -158,6 +198,7 @@ const RegisterScreen = () => {
         <InputComp
           label="Identity"
           placeholder="1234567890123456"
+          keyboard="numeric"
           value={id}
           onChangeText={(e) => setId(e)}
         />
@@ -170,13 +211,13 @@ const RegisterScreen = () => {
           contentType="telephoneNumber"
         />
         <InputComp
-          label="Phone *"
+          label="Email *"
           placeholder="example@gmail.com"
           value={email}
           onChangeText={(e) => setEmail(e)}
           contentType="emailAddress"
         />
-        <TextButton title={"Register"} />
+        <TextButton title={"Register"} onClick={hadleReagisterVisotor} />
       </ScrollView>
     </View>
   );
@@ -187,13 +228,12 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // marginTop: 25,
   },
   title: {
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
-    color:'white'
+    color: "white",
   },
   form: {
     paddingHorizontal: 20,

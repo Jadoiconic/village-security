@@ -10,6 +10,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 import { login } from "../../services/Auth";
 import { auth } from "../../services/config";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 interface NavigationProps{
   navigation: NavigationProp<any,any>
@@ -31,16 +32,17 @@ const SiginInScreen = ({navigation}:NavigationProps) => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const user = await login(email, password);
+      const user = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+  
       if (user) {
         navigation.navigate("Home");
       }
     } catch (error) {
-      if(error.code === "auth/invalid-credential"){
-        alert("Invalid Username or password");
-      }else{
-        alert("Something went wrong try again")
-      }
+        alert(error)
       throw error;
     }finally{
       setLoading(false)
