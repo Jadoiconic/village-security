@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import InputComp from "../../components/inputComp/InputComp";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,10 +13,10 @@ import data from "../../utility/data.js";
 import TextButton from "../../components/button/TextButton";
 import { AdministrativeArea } from "../../utility/AdminstrativeArea";
 import HeaderComponent from "../../components/header/HeaderComponent";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { auth, db } from "../../services/config";
 import { NavigationProp } from "@react-navigation/native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FontAwesome } from "@expo/vector-icons";
 import { signup } from "../../services/Auth";
 
 interface NavigationProps {
@@ -33,40 +39,58 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
 
   const [isRegister, setIsRegister] = useState(false);
 
+  const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
+
   // handle submit
+
   useEffect(() => {
     setUserId(auth.currentUser.uid);
-  }, []);
+    fetchData();
+    updateDistricts();
+    updateSectors();
+    updateCells();
+    updateVillages();
+  }, [province, district, sector, cell, village, isRegister, search]);
+
+  const fetchData = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "Visitors"));
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
 
   const hadleReagisterUser = async () => {
     try {
       if (!email) return alert("Please provide Email for login");
-      const userCredentials = await signup({ email, password });
-      if (userCredentials) {
-        console.log(userCredentials);
-      }else{
-        console.log("user Id not found")
+      const credentails = await signup({ email, password });
+      if (credentails) {
+        const docRef = await addDoc(collection(db, "Users"), {
+          firstName: fname,
+          lastName: lname,
+          privince: province,
+          district: district,
+          sector: sector,
+          cell: cell,
+          village: village,
+          role: level,
+          identity: id,
+          phone: phone,
+          email: email,
+          userId: credentails.user.uid,
+          registedBy: userId,
+        });
+        if (docRef) {
+          alert("Data Recorded successfuly!");
+          navigation.navigate("Users");
+        }
       }
-      // const docRef = await addDoc(collection(db, "Users"), {
-      //   firstName: fname,
-      //   lastName: lname,
-      //   privince: province,
-      //   district: district,
-      //   sector: sector,
-      //   cell: cell,
-      //   village: village,
-      //   role: level,
-      //   identity: id,
-      //   phone: phone,
-      //   email: email,
-      //   password: password,
-      //   userId: userIdNew,
-      //   registedBy: userId,
-      // });
-      // if (docRef) {
-      //   alert("Data Recorded successfuly!");
-      //   navigation.navigate("Users");
-      // }
     } catch (e) {
       alert(e);
     }
@@ -146,12 +170,14 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
     }
   };
 
-  useEffect(() => {
-    updateDistricts();
-    updateSectors();
-    updateCells();
-    updateVillages();
-  }, [province, district, sector, cell, village, isRegister]);
+  const filteredData = users.filter(
+    (user) =>
+      user.identity.toLowerCase().includes(search.toLowerCase()) ||
+      user.cell.toLowerCase().includes(search.toLowerCase()) ||
+      user.village.toLowerCase().includes(search.toLowerCase()) ||
+      user.sector.toLowerCase().includes(search.toLowerCase()) ||
+      user.district.toLowerCase().includes(search.toLowerCase())
+  );
 
   if (isRegister) {
     return (
@@ -244,7 +270,7 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
           <TextButton title={"Register User"} onClick={hadleReagisterUser} />
           <TouchableOpacity onPress={() => setIsRegister(false)}>
             <View>
-              <Text>View Users</Text>
+              <Text>View All Users</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -254,10 +280,53 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
     return (
       <View>
         <HeaderComponent title="Users" />
+        <View style={styles.searchContainer}>
+          <View
+            style={{
+              backgroundColor: "#eee",
+              width: "100%",
+              flexDirection: "row",
+              borderRadius: 5,
+            }}
+          >
+            <TextInput
+              placeholder="Search"
+              value={search}
+              onChangeText={(e) => setSearch(e)}
+              style={styles.searchBox}
+            />
+            <View style={styles.searchButton}>
+              <FontAwesome name="search" size={27} color="gray" />
+            </View>
+          </View>
+        </View>
         <TextButton
           title={"Add New Users"}
           onClick={() => setIsRegister(true)}
         />
+
+        <View style={[styles.row, { borderTopWidth: 1 }]}>
+          <Text style={{ width: 30, fontWeight: "bold" }}>No</Text>
+          <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Names</Text>
+          <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>email</Text>
+          <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Phone</Text>
+          <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Cell</Text>
+          <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Village</Text>
+          <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Level</Text>
+        </View>
+        {filteredData.map((visitor, index) => (
+          <View key={visitor.id} style={styles.row}>
+            <Text style={[{ width: 30 }]}>{index + 1}</Text>
+            <Text style={styles.rowTitle}>
+              {visitor.firstName} {visitor.lastName}
+            </Text>
+            <Text style={styles.rowTitle}>{visitor.identity}</Text>
+            <Text style={styles.rowTitle}>{visitor.phone}</Text>
+            <Text style={styles.rowTitle}>{visitor.cell}</Text>
+            <Text style={styles.rowTitle}>{visitor.village}</Text>
+            <Text style={styles.rowTitle}>{visitor.village}</Text>
+          </View>
+        ))}
       </View>
     );
   }
@@ -266,6 +335,17 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
 export default UsersScreen;
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+  },
+  rowTitle: {
+    width: 100,
+    borderRightWidth: 1,
+    height: 40,
+  },
   container: {
     flex: 1,
   },
@@ -278,5 +358,23 @@ const styles = StyleSheet.create({
   form: {
     paddingHorizontal: 20,
     marginBottom: 20,
+  },
+  searchContainer: {
+    backgroundColor: "#6C63FF",
+    flexDirection: "row",
+    paddingBottom: 10,
+    paddingHorizontal: 10,
+    marginBottom: 5,
+  },
+  searchBox: {
+    backgroundColor: "#eee",
+    width: "90%",
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  searchButton: {
+    padding: 10,
+    alignContent: "center",
   },
 });
