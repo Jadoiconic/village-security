@@ -34,25 +34,13 @@ const ProfileScreen = ({ navigation }: NavigationProps) => {
 
   const fetchData = async () => {
     try {
-      if (!userId) {
-        console.log("User not authenticated");
-        return;
-      }
-
-      console.log("User ID: ", userId);
-
       const q = query(collection(db, "Users"), where("userId", "==", userId));
       const querySnapshot = await getDocs(q);
-
-      console.log("Query Snapshot: ", querySnapshot);
 
       const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-
-      console.log("Fetched Data: ", data);
-
       setUserData(data);
     } catch (error) {
       console.error(

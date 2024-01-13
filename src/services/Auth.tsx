@@ -41,9 +41,8 @@ export const emailVerification = async (): Promise<void> => {
 
     alert("Email verification sent successfully.");
   } catch (error) {
-    const errorCode = (error as any).code;
     const errorMessage = (error as any).message;
-    alert("Email Verification Error:", errorCode, errorMessage);
+    alert(`Email Verification Error: ${errorMessage}`);
     throw error;
   }
 };
@@ -54,5 +53,5 @@ export const signup = async ({email, password}:loginProps) => {
     email,
     password
   );
-  if (userCredentials) console.log(userCredentials);
+  return userCredentials;
 };
