@@ -55,7 +55,7 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
 
   const fetchData = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "Visitors"));
+      const querySnapshot = await getDocs(collection(db, "Users"));
       const data = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -71,6 +71,7 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
       if (!email) return alert("Please provide Email for login");
       const credentails = await signup({ email, password });
       if (credentails) {
+        var datetime =new Date().toLocaleDateString();
         const docRef = await addDoc(collection(db, "Users"), {
           firstName: fname,
           lastName: lname,
@@ -83,6 +84,7 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
           identity: id,
           phone: phone,
           email: email,
+          createdAt: datetime,
           userId: credentails.user.uid,
           registedBy: userId,
         });
@@ -170,14 +172,14 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
     }
   };
 
-  const filteredData = users.filter(
-    (user) =>
-      user.identity.toLowerCase().includes(search.toLowerCase()) ||
-      user.cell.toLowerCase().includes(search.toLowerCase()) ||
-      user.village.toLowerCase().includes(search.toLowerCase()) ||
-      user.sector.toLowerCase().includes(search.toLowerCase()) ||
-      user.district.toLowerCase().includes(search.toLowerCase())
-  );
+  // const filteredData = users.filter(
+  //   (user) =>
+  //     user.identity.toLowerCase().includes(search.toLowerCase()) ||
+  //     user.cell.toLowerCase().includes(search.toLowerCase()) ||
+  //     user.village.toLowerCase().includes(search.toLowerCase()) ||
+  //     user.sector.toLowerCase().includes(search.toLowerCase()) ||
+  //     user.district.toLowerCase().includes(search.toLowerCase())
+  // );
 
   if (isRegister) {
     return (
@@ -268,7 +270,10 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
             contentType="emailAddress"
           />
           <TextButton title={"Register User"} onClick={hadleReagisterUser} />
-          <TouchableOpacity onPress={() => setIsRegister(false)}>
+          <TouchableOpacity
+            style={{ width: "100%", alignContent: "center", padding: 20 }}
+            onPress={() => setIsRegister(false)}
+          >
             <View>
               <Text>View All Users</Text>
             </View>
@@ -300,12 +305,14 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
             </View>
           </View>
         </View>
+        <View style={{width:'100%', marginBottom:15}}>
         <TextButton
           title={"Add New Users"}
           onClick={() => setIsRegister(true)}
         />
+        </View>
 
-        <View style={[styles.row, { borderTopWidth: 1 }]}>
+        <View style={[styles.row, { borderTopWidth: 1, }]}>
           <Text style={{ width: 30, fontWeight: "bold" }}>No</Text>
           <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Names</Text>
           <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>email</Text>
@@ -314,7 +321,7 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
           <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Village</Text>
           <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Level</Text>
         </View>
-        {filteredData.map((visitor, index) => (
+        {users.map((visitor, index) => (
           <View key={visitor.id} style={styles.row}>
             <Text style={[{ width: 30 }]}>{index + 1}</Text>
             <Text style={styles.rowTitle}>

@@ -20,8 +20,8 @@ export const login = async ({email, password}:loginProps) => {
 
     return userCredential;
   } catch (error) {
-   console.log(error)
-    throw error;
+   console.log("Invalid Email or Password!")
+    // throw error;
   }
 };
 
@@ -41,8 +41,7 @@ export const emailVerification = async (): Promise<void> => {
 
     alert("Email verification sent successfully.");
   } catch (error) {
-    const errorMessage = (error as any).message;
-    alert(`Email Verification Error: ${errorMessage}`);
+    alert(`Email Verification Error`);
     throw error;
   }
 };

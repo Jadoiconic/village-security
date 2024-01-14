@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import React from "react";
 import HeaderComponent from "../../components/header/HeaderComponent";
-import { auth } from "../../services/config";
-import homeImage from "../../../assets/images/ingabologo.jpg";
+import homeImage from "../../../assets/images/meeting.jpeg";
+import education from "../../../assets/images/education.jpeg";
 
 const HomeScreen = () => {
   const Message = () => {
@@ -18,26 +18,18 @@ const HomeScreen = () => {
     <View>
       <HeaderComponent title="Home Page" />
       <ScrollView style={styles.container}>
+        <Image source={homeImage} style={styles.image} />
         <Text style={styles.caption}>
           <Text style={styles.title}>Establish a community watch program</Text> where residents actively look out
           for each other and report any suspicious activities
         </Text>
-        <Image source={homeImage} style={styles.image} />
+        
+        <Image source={education} style={styles.image} />
         <Text style={styles.caption}>
         <Text style={styles.title}>Educate residents on emergency protocols</Text> and establish communication
           channels for swift response during unforeseen situations.
         </Text>
-        <Image source={homeImage} style={styles.image} />
-        <Text style={styles.caption}>
-        <Text style={styles.title}>Educate residents on emergency protocols</Text> and establish communication
-          channels for swift response during unforeseen situations.
-        </Text>
-        <Image source={homeImage} style={styles.image} />
-        <Text style={styles.caption}>
-        <Text style={styles.title}>Educate residents on emergency protocols</Text> and establish communication
-          channels for swift response during unforeseen situations.
-        </Text>
-        <Text>{auth.currentUser?.email}</Text>
+        
       </ScrollView>
     </View>
   );

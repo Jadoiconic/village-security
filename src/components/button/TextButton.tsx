@@ -4,7 +4,7 @@ import React from "react";
 interface buttonProps {
   title: string;
   onClick: (any: any) => void;
-  rest: object;
+  rest?: object;
 }
 const TextButton = ({ title, onClick, ...rest }: buttonProps) => {
   return (

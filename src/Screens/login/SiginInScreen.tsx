@@ -42,8 +42,8 @@ const SiginInScreen = ({navigation}:NavigationProps) => {
         navigation.navigate("Home");
       }
     } catch (error) {
-        alert(error)
-      throw error;
+      alert("Invalid Email or Password!")
+      // throw error;
     }finally{
       setLoading(false)
     }
@@ -80,7 +80,7 @@ const SiginInScreen = ({navigation}:NavigationProps) => {
         </View>
         <TouchableOpacity
           style={[styles.button,{backgroundColor: !email || !password.length  ||loading ? "#9C99ff" : "#6C63FF",}]}
-          disabled={!email || (!password && loading) ? true : false}
+          disabled={(!email || !password) && loading ? true : false}
           onPress={handleLogin}
         >
           <View>

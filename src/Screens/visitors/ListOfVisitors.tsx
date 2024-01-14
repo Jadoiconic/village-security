@@ -25,7 +25,7 @@ const ListOfVisitors = () => {
     };
 
     fetchData();
-  }, []);
+  }, [visitorData,search]);
 
   const filteredData = visitorData.filter(
     (visitor) =>

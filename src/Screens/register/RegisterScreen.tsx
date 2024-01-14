@@ -34,6 +34,7 @@ const RegisterScreen = ({ navigation }: NavigationProps) => {
 
   const hadleReagisterVisotor = async () => {
     try {
+      var currentdate = new Date().toLocaleDateString();
       const docRef = await addDoc(collection(db, "Visitors"), {
         firstName: fname,
         lastName: lname,
@@ -45,6 +46,7 @@ const RegisterScreen = ({ navigation }: NavigationProps) => {
         identity: id,
         phone: phone,
         email: email,
+        createdAt: currentdate,
         userId: userId,
       });
       if (docRef) {
@@ -211,7 +213,7 @@ const RegisterScreen = ({ navigation }: NavigationProps) => {
           contentType="telephoneNumber"
         />
         <InputComp
-          label="Email *"
+          label="Email"
           placeholder="example@gmail.com"
           value={email}
           onChangeText={(e) => setEmail(e)}

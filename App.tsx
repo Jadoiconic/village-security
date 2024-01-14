@@ -13,10 +13,32 @@ import RegisterScreen from "./src/Screens/register/RegisterScreen";
 import ProfileScreen from "./src/Screens/profile/ProfileScreen";
 import UsersScreen from "./src/Screens/users/UsersScreen";
 import ListOfVisitors from "./src/Screens/visitors/ListOfVisitors";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { auth, db } from "./src/services/config";
 
 const Tab = createMaterialBottomTabNavigator();
 
 function HomeBottomTab() {
+  const [users, setUsers] = useState("");
+  const userId = auth.currentUser?.email;
+  const fetchData = async () => {
+    try {
+      const q = query(collection(db, "Users"), where("userId", "==", userId));
+      const querySnapshot = await getDocs(q);
+
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching data: " + error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, [userId]);
   return (
     <Tab.Navigator
       activeColor="gray"
@@ -42,6 +64,7 @@ function HomeBottomTab() {
           ),
         }}
       />
+
       <Tab.Screen
         name="Visitor"
         component={ListOfVisitors}
@@ -51,15 +74,19 @@ function HomeBottomTab() {
           ),
         }}
       />
-      <Tab.Screen
-        name="Users"
-        component={UsersScreen}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Entypo name="users" color={color} size={26} />
-          ),
-        }}
-      />
+
+      {/* {Boolean(users.role === "village") && ( */}
+        <Tab.Screen
+          name="Users"
+          component={UsersScreen}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Entypo name="users" color={color} size={26} />
+            ),
+          }}
+        />
+      {/* )} */}
+
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
