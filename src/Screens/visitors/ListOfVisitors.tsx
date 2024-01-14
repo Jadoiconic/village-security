@@ -4,7 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../services/config";
 import HeaderComponent from "../../components/header/HeaderComponent";
 import { FontAwesome } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 
 const ListOfVisitors = () => {
   const [visitorData, setVisitorData] = useState([]);
@@ -25,7 +25,7 @@ const ListOfVisitors = () => {
     };
 
     fetchData();
-  }, [visitorData,search]);
+  }, [visitorData, search]);
 
   const filteredData = visitorData.filter(
     (visitor) =>
@@ -59,24 +59,36 @@ const ListOfVisitors = () => {
           </View>
         </View>
       </View>
-      <View style={[styles.row,{borderTopWidth:1}]}>
-        <Text style={{ width: 30, fontWeight: "bold" }}>No</Text>
-        <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Names</Text>
-        <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Id</Text>
-        <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Phone</Text>
-        <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Cell</Text>
-        <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Village</Text>
-      </View>
-      {filteredData.map((visitor, index) => (
-        <View key={visitor.id} style={styles.row}>
-          <Text style={[{ width: 30 }]}>{index + 1}</Text>
-          <Text style={styles.rowTitle}>{visitor.firstName} {visitor.lastName}</Text>
-          <Text style={styles.rowTitle}>{visitor.identity}</Text>
-          <Text style={styles.rowTitle}>{visitor.phone}</Text>
-          <Text style={styles.rowTitle}>{visitor.cell}</Text>
-          <Text style={styles.rowTitle}>{visitor.village}</Text>
+      <ScrollView horizontal>
+        <View>
+          <View style={[styles.row, { borderTopWidth: 1 }]}>
+            <Text style={{ width: 30, fontWeight: "bold" }}>No</Text>
+            <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Names</Text>
+            <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Id</Text>
+            <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Phone</Text>
+            <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Cell</Text>
+            <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>
+              Village
+            </Text>
+            <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>
+              Date
+            </Text>
+          </View>
+          {filteredData.map((visitor, index) => (
+            <View key={index} style={styles.row}>
+              <Text style={[{ width: 30 }]}>{index + 1}</Text>
+              <Text style={styles.rowTitle}>
+                {visitor.firstName} {visitor.lastName}
+              </Text>
+              <Text style={styles.rowTitle}>{visitor.identity}</Text>
+              <Text style={styles.rowTitle}>{visitor.phone}</Text>
+              <Text style={styles.rowTitle}>{visitor.cell}</Text>
+              <Text style={styles.rowTitle}>{visitor.village}</Text>
+              <Text style={styles.rowTitle}>{visitor?.createdAt}</Text>
+            </View>
+          ))}
         </View>
-      ))}
+      </ScrollView>
     </View>
   );
 };
@@ -88,12 +100,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
-    borderBottomWidth:1,
+    borderBottomWidth: 1,
+    width: "100%",
   },
   rowTitle: {
-    width: 100,
-    borderRightWidth:1,
-    height:40
+    width: 120,
+    borderRightWidth: 1,
+    height: 40,
   },
   searchContainer: {
     backgroundColor: "#6C63FF",

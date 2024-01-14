@@ -35,6 +35,11 @@ const RegisterScreen = ({ navigation }: NavigationProps) => {
   const hadleReagisterVisotor = async () => {
     try {
       var currentdate = new Date().toLocaleDateString();
+      if (!fname || !lname || !phone || !id)
+        return alert(
+          "Some fields are Empty, Please fill form and submit again!"
+        );
+
       const docRef = await addDoc(collection(db, "Visitors"), {
         firstName: fname,
         lastName: lname,
@@ -202,14 +207,18 @@ const RegisterScreen = ({ navigation }: NavigationProps) => {
           placeholder="1234567890123456"
           keyboard="numeric"
           value={id}
-          onChangeText={(e) => setId(e)}
+          onChangeText={(e) => {
+            if (!isNaN(e)) setId(e);
+          }}
         />
         <InputComp
           label="Phone"
           placeholder="078xxxxxxx"
           value={phone}
           keyboard="numeric"
-          onChangeText={(e) => sePhone(e)}
+          onChangeText={(e) => {
+            if (!isNaN(e)) sePhone(e);
+          }}
           contentType="telephoneNumber"
         />
         <InputComp

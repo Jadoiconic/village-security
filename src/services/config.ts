@@ -40,7 +40,7 @@ const persistAuthState = async (user:any) => {
       await AsyncStorage.removeItem('user');
     }
   } catch (error) {
-    console.error('Error persisting auth state:', error);
+    console.log('Error persisting auth state:');
   }
 };
 

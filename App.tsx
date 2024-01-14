@@ -33,12 +33,15 @@ function HomeBottomTab() {
       }));
       setUsers(data);
     } catch (error) {
-      console.error("Error fetching data: " + error);
+      console.log(`Error fetching data: ${error}`);
     }
   };
   useEffect(() => {
     fetchData();
   }, [userId]);
+
+  const firstUser = users.length > 0 ? users[0] : null;
+  const showUsersTab = firstUser && firstUser.role !== "village";
   return (
     <Tab.Navigator
       activeColor="gray"
@@ -75,7 +78,7 @@ function HomeBottomTab() {
         }}
       />
 
-      {/* {Boolean(users.role === "village") && ( */}
+      {/* {showUsersTab && */}
         <Tab.Screen
           name="Users"
           component={UsersScreen}
@@ -85,7 +88,7 @@ function HomeBottomTab() {
             ),
           }}
         />
-      {/* )} */}
+      {/* }  */}
 
       <Tab.Screen
         name="Profile"

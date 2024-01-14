@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -68,10 +69,10 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
 
   const hadleReagisterUser = async () => {
     try {
-      if (!email) return alert("Please provide Email for login");
+      if (!email || !fname || !lname || !phone || !id) return alert("Some fields are Empty, Please fill form and submit again!");
       const credentails = await signup({ email, password });
       if (credentails) {
-        var datetime =new Date().toLocaleDateString();
+        var datetime = new Date().toLocaleDateString();
         const docRef = await addDoc(collection(db, "Users"), {
           firstName: fname,
           lastName: lname,
@@ -91,10 +92,13 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
         if (docRef) {
           alert("Data Recorded successfuly!");
           navigation.navigate("Users");
+        } else {
         }
+      }else{
+        Alert.alert("Please provide valid email!")
       }
     } catch (e) {
-      alert(e);
+      Alert.alert("Something went wrong try again! with right Email");
     }
   };
 
@@ -252,14 +256,18 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
             placeholder="1234567890123456"
             keyboard="numeric"
             value={id}
-            onChangeText={(e) => setId(e)}
+            onChangeText={(e) =>  {
+              if (!isNaN(e)) setId(e);
+            }}
           />
           <InputComp
             label="Phone"
             placeholder="078xxxxxxx"
             value={phone}
             keyboard="numeric"
-            onChangeText={(e) => sePhone(e)}
+            onChangeText={(e) => {
+              if (!isNaN(e)) sePhone(e);
+            }}
             contentType="telephoneNumber"
           />
           <InputComp
@@ -305,14 +313,14 @@ const UsersScreen = ({ navigation }: NavigationProps) => {
             </View>
           </View>
         </View>
-        <View style={{width:'100%', marginBottom:15}}>
-        <TextButton
-          title={"Add New Users"}
-          onClick={() => setIsRegister(true)}
-        />
+        <View style={{ width: "100%", marginBottom: 15 }}>
+          <TextButton
+            title={"Add New Users"}
+            onClick={() => setIsRegister(true)}
+          />
         </View>
 
-        <View style={[styles.row, { borderTopWidth: 1, }]}>
+        <View style={[styles.row, { borderTopWidth: 1 }]}>
           <Text style={{ width: 30, fontWeight: "bold" }}>No</Text>
           <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>Names</Text>
           <Text style={[styles.rowTitle, { fontWeight: "bold" }]}>email</Text>
